@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050505">
+  <meta name="description" content="A cinematic scroll-driven hero experience inspired by The Weeknd's dark visual universe.">
+  <title>The Weeknd — Cinematic Hero</title>
+  <link rel="preload" as="image" href="assets/images/hero_background.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/hero.webp" type="image/webp" fetchpriority="high">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="preloader" id="preloader" aria-live="polite">
+    <div class="preloader__inner">
+      <div class="preloader__mark" aria-hidden="true">XO</div>
+      <p class="preloader__label">ENTERING THE VOID</p>
+      <div class="preloader__track"><span id="preloaderBar"></span></div>
+      <p class="preloader__value"><span id="preloaderValue">0</span>%</p>
+    </div>
+  </div>
+
+  <div class="noise" aria-hidden="true"></div>
+
+  <div class="master-progress" aria-hidden="true"><span id="masterProgressBar"></span></div>
+  <div class="chapter-transition" id="chapterTransition" aria-hidden="true"><i></i><b></b></div>
+  <div class="custom-cursor" id="customCursor" aria-hidden="true"><span></span></div>
+
+  <main>
+    <section class="experience" id="home" aria-label="The Weeknd cinematic hero experience">
+      <div class="hero-stage" id="heroStage">
+        <div class="hero-world" id="heroWorld" aria-hidden="true">
+          <div class="hero-background layer" data-depth="0.06"></div>
+          <div class="red-halo"></div>
+          <img class="smoke smoke--back layer" data-depth="0.13" src="assets/images/smoke_hero1.webp" alt="" width="1536" height="1024" decoding="async" draggable="false">
+
+          <div class="title-depth" id="titleDepth">
+            <span class="title-word title-word--the">THE</span>
+            <span class="title-word title-word--weeknd">WEEKND</span>
+          </div>
+
+          <div class="portrait-wrap layer" data-depth="0.22" id="portraitWrap">
+            <picture class="portrait-picture">
+              <source media="(max-width: 768px)" srcset="assets/images/hero-mobile.webp" type="image/webp">
+              <img class="portrait" src="assets/images/hero.webp" alt="Abel Tesfaye portrait" width="1536" height="1024" decoding="sync" fetchpriority="high" draggable="false">
+            </picture>
+            <div class="portrait-rim"></div>
+          </div>
+
+          <img class="smoke smoke--front layer" data-depth="0.38" src="assets/images/smoke_hero.webp" alt="" width="1536" height="1024" decoding="async" draggable="false">
+          <div class="embers" id="embers"></div>
+        </div>
+
+        <div class="interface" id="interface">
+          <header class="site-header">
+            <a class="brand" href="#home" aria-label="Back to hero">XO</a>
+            <nav class="desktop-nav" aria-label="Main navigation">
+              <a class="is-active" href="#home">Home</a>
+              <a href="#release">Music</a>
+              <a href="#release">Tour</a>
+              <a href="#release">Videos</a>
+              <a href="#release">Shop</a>
+              <a href="#release">About</a>
+            </nav>
+            <div class="header-actions">
+              <a class="icon-link" href="#release" aria-label="Music">♪</a>
+              <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+              </button>
+            </div>
+          </header>
+
+          <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+            <nav aria-label="Mobile navigation">
+              <a href="#home">Home</a>
+              <a href="#release">Music</a>
+              <a href="#release">Tour</a>
+              <a href="#release">Videos</a>
+              <a href="#release">Shop</a>
+              <a href="#release">About</a>
+            </nav>
+          </div>
+
+          <div class="hero-meta hero-meta--left" id="leftMeta">
+            <p class="eyebrow">ABEL TESFAYE</p>
+            <div class="meta-rule"></div>
+            <p class="meta-kicker">NEW ALBUM</p>
+            <h1>HURRY UP<br>TOMORROW</h1>
+            <a class="primary-cta" href="#release">
+              <span>EXPLORE ERA</span>
+              <span class="cta-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="hero-meta hero-meta--right" id="rightMeta">
+            <p class="quote">A NEW NIGHT.<br>A DIFFERENT DESTINY.</p>
+            <div class="waveform" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+          </div>
+
+          <aside class="progress-rail" aria-label="Hero chapters">
+            <span class="rail-dot is-active" data-step="0"></span>
+            <span class="rail-dot" data-step="1"></span>
+            <span class="rail-dot" data-step="2"></span>
+            <span class="rail-dot" data-step="3"></span>
+            <span class="rail-dot" data-step="4"></span>
+          </aside>
+
+          <div class="scroll-label" aria-hidden="true">
+            <span>SCROLL</span><i></i>
+          </div>
+
+          <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="false" title="Visual audio mode — no audio file included">
+            <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span class="sound-text">VISUALIZER</span>
+          </button>
+
+          <article class="release-card" id="releaseCard">
+            <picture>
+              <source srcset="assets/images/album_artwork.avif" type="image/avif">
+              <img src="assets/images/album_artwork.webp" alt="Hurry Up Tomorrow artwork" width="240" height="240" loading="lazy" decoding="async" draggable="false">
+            </picture>
+            <div class="release-copy">
+              <span>NEW ERA</span>
+              <strong>Hurry Up Tomorrow</strong>
+              <small>The Weeknd</small>
+            </div>
+            <button class="release-play" id="releasePlay" type="button" aria-label="Toggle visual preview" aria-pressed="false">
+              <span class="play-icon">▶</span>
+            </button>
+          </article>
+
+          <div class="scroll-orb" id="scrollOrb" aria-hidden="true">
+            <span></span>
+            <small id="scrollPercent">00</small>
+          </div>
+        </div>
+
+        <div class="chapter-card" id="chapterCard" aria-hidden="true">
+          <span>01</span>
+          <p>FROM THE SHADOWS<br>INTO THE RED</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="hut-era hut-era--ascension" id="release" aria-labelledby="hutTitle">
+      <div class="hut-stage" id="hutStage">
+        <div class="hut-ambient" aria-hidden="true">
+          <div class="hut-vignette"></div>
+          <div class="hut-glow hut-glow--one"></div>
+          <div class="hut-glow hut-glow--two"></div>
+          <div class="hut-embers" id="hutEmbers"></div>
+        </div>
+
+        <header class="hut-nav" aria-label="Chapter 2 navigation">
+          <a class="hut-brand" href="#home">THE WEEKND <b>✦</b></a>
+          <nav>
+            <a href="#home">Sound</a>
+            <a class="is-active" href="#release">Vision</a>
+            <a href="#rebirth">Story</a>
+            <a href="#legacy">Legacy</a>
+            <a href="#afterlife">Finale</a>
+          </nav>
+          <span class="hut-menu-lines" aria-hidden="true"><i></i><i></i></span>
+        </header>
+
+        <aside class="hut-chapter-rail" aria-label="Website chapters">
+          <div><span>01</span><small>DAWN</small></div>
+          <div class="is-active"><span>02</span><small>ASCENSION</small></div>
+          <div><span>03</span><small>REBIRTH</small></div>
+          <div><span>04</span><small>LEGACY</small></div>
+          <div><span>05</span><small>AFTERLIFE</small></div>
+        </aside>
+
+        <div class="hut-scene" id="hutScene" aria-label="Ascension through a monumental fire-lit performance world">
+          <figure class="hut-plane hut-plane--inferno" data-hut-depth="0.025">
+            <picture>
+              <source media="(max-width: 768px)" type="image/avif" srcset="assets/chapter2/ascension-world-mobile.avif">
+              <source media="(max-width: 768px)" type="image/webp" srcset="assets/chapter2/ascension-world-mobile.webp">
+              <source type="image/avif" srcset="assets/chapter2/ascension-world.avif">
+              <img src="assets/chapter2/ascension-world.webp" alt="A vast dark performance arena filled with red fire, smoke and a reflective floor" width="1672" height="941" loading="lazy" decoding="async" draggable="false">
+            </picture>
+          </figure>
+
+          <div class="hut-fire-column" aria-hidden="true"></div>
+          <div class="hut-stage-reflection" aria-hidden="true"></div>
+
+          <figure class="hut-plane hut-plane--ascension-hero" data-hut-depth="0.28">
+            <picture>
+              <source media="(max-width: 768px)" type="image/webp" srcset="assets/chapter2/abel-ascension-mobile.webp">
+              <img src="assets/chapter2/abel-ascension.webp" alt="Abel Tesfaye in black standing with his arms open beneath a fiery sky" width="1024" height="1536" loading="lazy" decoding="async" draggable="false">
+            </picture>
+          </figure>
+
+          <div class="hut-foreground-haze hut-foreground-haze--left" aria-hidden="true"></div>
+          <div class="hut-foreground-haze hut-foreground-haze--right" aria-hidden="true"></div>
+        </div>
+
+        <div class="hut-copy" id="hutCopy">
+          <p class="hut-kicker">CHAPTER 02</p>
+          <h2 id="hutTitle">ASCENSION</h2>
+          <div class="hut-rule"><i></i><span>✦</span><i></i></div>
+          <h3>RISE THROUGH THE FIRE.</h3>
+          <p class="hut-manifesto">I broke the silence.<br>I lit the sky.<br>Every scar became a signal.<br>Every fall became fuel.<br>Now I ascend.<br>Higher than the dark.<br>This is not the end.<br>This is <strong>ASCENSION.</strong></p>
+          <a class="hut-trailer" href="#rebirth" aria-label="Continue to Chapter 3">
+            <span class="hut-play">▶</span>
+            <span><b>WATCH CHAPTER 02 VISUAL</b><small>THE JOURNEY CONTINUES</small></span>
+          </a>
+        </div>
+
+        <div class="hut-bottom-brand"><b>XO</b><span>THANK YOU<br>FOR THE PAIN</span></div>
+        <div class="hut-scroll-cue"><span>SCROLL TO CONTINUE THE JOURNEY</span><i></i></div>
+        <div class="hut-counter"><i></i><b>02</b><span>/05</span></div>
+        <div class="hut-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      </div>
+    </section>
+
+    <section class="rebirth-era" id="rebirth" aria-labelledby="rebirthTitle">
+      <div class="rebirth-stage" id="rebirthStage">
+        <div class="rebirth-world" id="rebirthWorld" aria-hidden="true">
+          <picture class="rebirth-layer" data-rebirth-depth="0.035">
+            <source media="(max-width: 768px)" type="image/avif" srcset="assets/chapter3/rebirth-world-mobile.avif">
+            <source media="(max-width: 768px)" type="image/webp" srcset="assets/chapter3/rebirth-world-mobile.webp">
+            <source type="image/avif" srcset="assets/chapter3/rebirth-world.avif">
+            <img class="rebirth-bg" src="assets/chapter3/rebirth-world.webp" alt="" width="1672" height="941" loading="lazy" decoding="async" draggable="false">
+          </picture>
+          <div class="rebirth-grade"></div>
+          <div class="rebirth-horizon-glow" id="rebirthGlow"></div>
+
+          <div class="rebirth-eclipse rebirth-layer" id="rebirthEclipse" data-rebirth-depth="0.075">
+            <span class="rebirth-eclipse__outer"></span>
+            <span class="rebirth-eclipse__mid"></span>
+            <span class="rebirth-eclipse__core"></span>
+            <i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="rebirth-perspective-grid" id="rebirthGrid"></div>
+          <div class="rebirth-crowd-light"></div>
+
+          <figure class="rebirth-hero-wrap rebirth-layer" data-rebirth-depth="0.27">
+            <span class="rebirth-hero-rim"></span>
+            <picture>
+              <source media="(max-width: 768px)" type="image/webp" srcset="assets/chapter3/abel-rebirth-mobile.webp">
+              <img class="rebirth-hero" src="assets/chapter3/abel-rebirth.webp" alt="Abel Tesfaye looking back before a masked red-robed congregation" width="1024" height="1536" loading="lazy" decoding="async" draggable="false">
+            </picture>
+          </figure>
+
+          <div class="rebirth-smoke rebirth-smoke--left"></div>
+          <div class="rebirth-smoke rebirth-smoke--right"></div>
+          <div class="rebirth-particles" id="rebirthParticles"></div>
+        </div>
+
+        <div class="rebirth-cinematic-frame" id="rebirthFrame" aria-hidden="true">
+          <i></i><i></i><i></i><i></i>
+        </div>
+
+        <header class="rebirth-nav" aria-label="Chapter 3 navigation">
+          <a class="rebirth-brand" href="#home" aria-label="Back to the hero">XO</a>
+          <p>THE WEEKND <span>/</span> CINEMATIC ARCHIVE</p>
+          <span>03 <i></i> 06</span>
+        </header>
+
+        <div class="rebirth-chapter-lockup" id="rebirthLockup">
+          <span>CHAPTER 03</span>
+          <i></i>
+          <strong>THE TRANSFORMATION</strong>
+        </div>
+
+        <div class="rebirth-title-block" id="rebirthTitleBlock">
+          <p class="rebirth-kicker"><span></span> REBIRTH / A NEW ORDER</p>
+          <h2 id="rebirthTitle" aria-label="THE TRANSFORMATION">
+            <span class="rebirth-word rebirth-word--light">THE</span>
+            <span class="rebirth-word rebirth-word--red">TRANSFORMATION</span>
+          </h2>
+          <div class="rebirth-title-rule"><i></i><b>03</b><i></i></div>
+          <p class="rebirth-manifesto"><span>Beyond the face.</span><br><em>Into the ritual.</em></p>
+          <div class="rebirth-cta" aria-hidden="true">
+            <span>ENTER THE CHAPTER</span><i></i><b>✦</b>
+          </div>
+        </div>
+
+        <blockquote class="rebirth-side-quote" id="rebirthSideQuote">
+          <span>“</span>
+          <p>The end was never<br>the ending.</p>
+          <small>REBIRTH / 03</small>
+        </blockquote>
+
+        <aside class="rebirth-rail" aria-label="Website chapters">
+          <span>01</span><span>02</span><span class="is-active">03</span><span>04</span><span>05</span><span>06</span>
+        </aside>
+
+        <div class="rebirth-footer-meta">
+          <span>03 / VI</span><i></i><strong>THE JOURNEY CONTINUES</strong>
+        </div>
+
+        <div class="rebirth-next" id="rebirthNext" aria-label="Chapter 4 coming next">
+          <small>COMING NEXT</small>
+          <span>04</span>
+          <strong>LEGACY</strong>
+          <i>↗</i>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="legacy-era" id="legacy" aria-labelledby="legacyTitle">
+      <div class="legacy-stage" id="legacyStage">
+        <div class="legacy-world" id="legacyWorld" aria-hidden="true">
+          <div class="legacy-blackout"></div>
+          <div class="legacy-architecture legacy-layer" data-legacy-depth="0.025">
+            <span class="legacy-pillar legacy-pillar--1"></span>
+            <span class="legacy-pillar legacy-pillar--2"></span>
+            <span class="legacy-pillar legacy-pillar--3"></span>
+            <span class="legacy-pillar legacy-pillar--4"></span>
+            <span class="legacy-pillar legacy-pillar--5"></span>
+            <span class="legacy-pillar legacy-pillar--6"></span>
+          </div>
+
+          <div class="legacy-sanctum legacy-layer" data-legacy-depth="0.055">
+            <span class="legacy-arch legacy-arch--outer"></span>
+            <span class="legacy-arch legacy-arch--inner"></span>
+            <span class="legacy-vertical-light"></span>
+            <span class="legacy-altar"></span>
+            <span class="legacy-silhouette"></span>
+          </div>
+
+          <div class="legacy-eclipse legacy-layer" id="legacyEclipse" data-legacy-depth="0.095">
+            <span class="legacy-eclipse__orbit legacy-eclipse__orbit--1"></span>
+            <span class="legacy-eclipse__orbit legacy-eclipse__orbit--2"></span>
+            <span class="legacy-eclipse__orbit legacy-eclipse__orbit--3"></span>
+            <span class="legacy-eclipse__core"></span>
+            <i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="legacy-procession legacy-layer" data-legacy-depth="0.11">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+
+          <div class="legacy-floor legacy-layer" id="legacyFloor" data-legacy-depth="0.04">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="legacy-red-haze" id="legacyRedHaze"></div>
+          <div class="legacy-smoke legacy-smoke--a"></div>
+          <div class="legacy-smoke legacy-smoke--b"></div>
+          <div class="legacy-dust" id="legacyDust"></div>
+        </div>
+
+        <div class="legacy-xo-mark legacy-layer" data-legacy-depth="0.04" aria-hidden="true">XO</div>
+
+        <div class="legacy-throne legacy-layer" data-legacy-depth="0.20" aria-hidden="true">
+          <span class="legacy-throne__crown"></span>
+          <span class="legacy-throne__back"></span>
+          <span class="legacy-throne__arm legacy-throne__arm--left"></span>
+          <span class="legacy-throne__arm legacy-throne__arm--right"></span>
+        </div>
+
+        <figure class="legacy-portrait legacy-layer" id="legacyPortrait" data-legacy-depth="0.30">
+          <div class="legacy-portrait__halo"></div>
+          <picture>
+            <source media="(max-width: 768px)" type="image/webp" srcset="assets/chapter4/abel-legacy-mobile.webp">
+            <img src="assets/chapter4/abel-legacy.webp" alt="Abel Tesfaye seated in a red suit and sunglasses with rising blue smoke" width="1024" height="1536" loading="lazy" decoding="async" draggable="false">
+          </picture>
+        </figure>
+
+        <div class="legacy-props legacy-layer" data-legacy-depth="0.34" aria-hidden="true">
+          <div class="legacy-decanter"><i></i></div>
+          <div class="legacy-glass legacy-glass--1"></div>
+          <div class="legacy-glass legacy-glass--2"></div>
+        </div>
+
+        <div class="legacy-candles legacy-layer" data-legacy-depth="0.31" aria-hidden="true">
+          <span class="legacy-candle legacy-candle--1"><i></i></span>
+          <span class="legacy-candle legacy-candle--2"><i></i></span>
+          <span class="legacy-candle legacy-candle--3"><i></i></span>
+        </div>
+
+        <header class="legacy-nav" aria-label="Chapter 4 navigation">
+          <a class="legacy-brand" href="#home">THE WEEKND <b>✦</b></a>
+          <nav><a href="#home">Sound</a><a href="#release">Vision</a><a href="#rebirth">Story</a><a href="#legacy">Legacy</a><a href="#afterlife">Finale</a></nav>
+          <span class="legacy-menu-lines" aria-hidden="true"><i></i><i></i></span>
+        </header>
+
+        <aside class="legacy-rail" aria-label="Website chapters">
+          <div><span>01</span><small>DAWN</small></div>
+          <div><span>02</span><small>ASCENSION</small></div>
+          <div><span>03</span><small>REBIRTH</small></div>
+          <div class="is-active"><span>04</span><small>LEGACY</small></div>
+          <div><span>05</span><small>AFTERLIFE</small></div>
+        </aside>
+
+        <div class="legacy-copy" id="legacyCopy">
+          <p class="legacy-kicker">CHAPTER 04</p>
+          <h2 id="legacyTitle">LEGACY</h2>
+          <div class="legacy-rule"><i></i><span>✦</span><i></i></div>
+          <h3>LEGENDS NEVER FADE.</h3>
+          <p class="legacy-manifesto">I came from the shadows.<br>I built my empire in silence.<br>This is not the end.<br>This is what I leave behind.<br>This is <strong>LEGACY.</strong></p>
+          <button class="legacy-trailer" type="button" aria-label="Watch Chapter 4 trailer">
+            <span class="legacy-play">▶</span>
+            <span><b>WATCH CHAPTER 04 TRAILER</b><small>ENTER THE LEGACY</small></span>
+          </button>
+        </div>
+
+        <div class="legacy-bottom-brand"><b>XO</b><span>AFTER HOURS<br>TIL DAWN</span></div>
+        <div class="legacy-scroll-cue"><span>SCROLL TO COMPLETE THE JOURNEY</span><i></i></div>
+        <div class="legacy-counter"><i></i><b>04</b><span>/05</span></div>
+
+        <div class="legacy-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      </div>
+    </section>
+
+
+    <section class="afterlife-era" id="afterlife" aria-labelledby="afterlifeTitle">
+      <div class="afterlife-stage" id="afterlifeStage">
+        <div class="afterlife-world" id="afterlifeWorld" aria-hidden="true">
+          <figure class="afterlife-bg afterlife-layer" data-afterlife-depth="0.018">
+            <picture>
+              <source media="(max-width: 768px)" type="image/avif" srcset="assets/chapter5/afterlife-temple-mobile.avif">
+              <source media="(max-width: 768px)" type="image/webp" srcset="assets/chapter5/afterlife-temple-mobile.webp">
+              <source type="image/avif" srcset="assets/chapter5/afterlife-temple.avif">
+              <img src="assets/chapter5/afterlife-temple.webp" alt="" width="1448" height="1086" loading="lazy" decoding="async" draggable="false">
+            </picture>
+          </figure>
+          <div class="afterlife-vignette"></div>
+          <div class="afterlife-colorwash"></div>
+
+          <div class="afterlife-portal afterlife-layer" id="afterlifePortal" data-afterlife-depth="0.055">
+            <span class="afterlife-portal__ring afterlife-portal__ring--outer"></span>
+            <span class="afterlife-portal__ring afterlife-portal__ring--middle"></span>
+            <span class="afterlife-portal__ring afterlife-portal__ring--inner"></span>
+            <span class="afterlife-portal__star"></span>
+          </div>
+
+          <div class="afterlife-beam afterlife-layer" id="afterlifeBeam" data-afterlife-depth="0.075"></div>
+
+          <figure class="afterlife-people-center afterlife-layer" id="afterlifeRitual" data-afterlife-depth="0.26">
+            <picture>
+              <source media="(max-width: 768px)" type="image/webp" srcset="assets/chapter5/afterlife-ritual-mobile.webp">
+              <img src="assets/chapter5/afterlife-ritual.webp" alt="A theatrical ritual composition with red performers reaching toward a floating figure" width="1536" height="1024" loading="lazy" decoding="async" draggable="false">
+            </picture>
+          </figure>
+
+          <div class="afterlife-floor afterlife-layer" id="afterlifeFloor" data-afterlife-depth="0.04">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="afterlife-red-mist afterlife-layer" id="afterlifeMist" data-afterlife-depth="0.09"></div>
+          <div class="afterlife-dust" id="afterlifeDust"></div>
+        </div>
+
+        <header class="afterlife-nav" aria-label="Chapter 5 navigation">
+          <a class="afterlife-brand" href="#home">THE WEEKND <b>✦</b></a>
+          <nav><a href="#home">Sound</a><a href="#release">Vision</a><a href="#rebirth">Story</a><a href="#legacy">Legacy</a></nav>
+          <span class="afterlife-menu-lines" aria-hidden="true"><i></i><i></i></span>
+        </header>
+
+        <aside class="afterlife-rail" aria-label="Website chapters">
+          <div><span>01</span><small>DAWN</small></div>
+          <div><span>02</span><small>ASCENSION</small></div>
+          <div><span>03</span><small>REBIRTH</small></div>
+          <div><span>04</span><small>LEGACY</small></div>
+          <div class="is-active"><span>05</span><small>AFTERLIFE</small></div>
+        </aside>
+
+        <div class="afterlife-copy" id="afterlifeCopy">
+          <p class="afterlife-kicker">CHAPTER 05</p>
+          <h2 id="afterlifeTitle">AFTERLIFE</h2>
+          <div class="afterlife-rule"><i></i><span>✦</span><i></i></div>
+          <h3>THE END IS NOT THE END.<br><b>IT'S THE OTHER SIDE.</b></h3>
+          <p class="afterlife-manifesto">I lived in the dark.<br>I loved in the dark.<br>I gave you my darkness.<br>Now I walk into the light,<br>not to be seen — but to be free.<br>This is <strong>AFTERLIFE.</strong></p>
+          <button class="afterlife-trailer" type="button" aria-label="Watch Chapter 5 trailer">
+            <span class="afterlife-play">▶</span>
+            <span><b>WATCH CHAPTER 05 TRAILER</b><small>THE FINAL CHAPTER</small></span>
+          </button>
+        </div>
+
+        <div class="afterlife-bottom-brand"><b>XO</b><span>THANK YOU<br>FOR THE JOURNEY</span></div>
+        <div class="afterlife-scroll-cue"><span>SCROLL TO COMPLETE THE JOURNEY</span><i></i></div>
+        <div class="afterlife-counter"><i></i><b>05</b><span>/05</span></div>
+        <div class="afterlife-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      </div>
+    </section>
+
+
+    <section class="finale-outro" id="finale" aria-label="The Weeknd cinematic finale">
+      <div class="finale-stage" id="finaleStage">
+        <div class="finale-void" aria-hidden="true">
+          <div class="finale-orbit finale-orbit--one"></div>
+          <div class="finale-orbit finale-orbit--two"></div>
+          <div class="finale-light"></div>
+          <div class="finale-stars" id="finaleStars"></div>
+        </div>
+        <div class="finale-content" id="finaleContent">
+          <p>05 / 05 &nbsp;·&nbsp; THE FINAL CHAPTER</p>
+          <div class="finale-xo" aria-hidden="true">XO</div>
+          <h2>THE JOURNEY CONTINUES</h2>
+          <span>HURRY UP TOMORROW</span>
+          <a href="#home" class="finale-replay">REPLAY THE EXPERIENCE <b>↺</b></a>
+        </div>
+        <div class="finale-signoff">ABEL TESFAYE &nbsp; / &nbsp; THE WEEKND</div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

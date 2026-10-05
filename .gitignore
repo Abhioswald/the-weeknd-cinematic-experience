@@ -1,0 +1,33 @@
+# Original / high-resolution source assets
+assets/source/
+
+# Development / benchmark files
+scratch/
+*.log
+benchmark*.json
+phase*_benchmark*.json
+
+# Browser test profiles
+chrome_profile/
+.chrome-profile/
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+
+# Node dependencies if added later
+node_modules/
+
+# Environment files
+.env
+.env.*
