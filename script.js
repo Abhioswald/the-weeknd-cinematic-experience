@@ -564,10 +564,20 @@
     }
     if (activeIndex !== lastChapterIndex) {
       lastChapterIndex = activeIndex;
-      document.body.dataset.chapter = String(Math.min(activeIndex + 1, 5)).padStart(2, '0');
+      if (typeof updateActiveChapterUI === 'function') {
+        updateActiveChapterUI(activeIndex);
+      }
       // Progressive decode: Current chapter + next chapter only (Requirements 8 & 9)
       prepareChapterAssets(activeIndex);
       prepareChapterAssets(activeIndex + 1);
+
+      // Natural scroll hash updates via replaceState (Requirement 39 - only on chapter change)
+      if (typeof CHAPTER_CONFIG !== 'undefined' && CHAPTER_CONFIG[activeIndex]) {
+        const chapterId = CHAPTER_CONFIG[activeIndex].id;
+        if (window.location.hash !== '#' + chapterId) {
+          history.replaceState(null, '', '#' + chapterId);
+        }
+      }
     }
   }
 
@@ -1753,10 +1763,159 @@
   }
 
   /* ==========================================================
-     13. UI CONTROLS & NAVIGATION
+     13. CENTRAL NAVIGATION & INTERACTION CONTROLLER
      ========================================================== */
+  const CHAPTER_CONFIG = [
+    { id: 'hero', aliases: ['home', '01'], section: experience, stage: heroStage, name: 'Hero' },
+    { id: 'ascension', aliases: ['release', '02'], section: hutEra, stage: hutStage, name: 'Ascension' },
+    { id: 'rebirth', aliases: ['03'], section: rebirthEra, stage: rebirthStage, name: 'Rebirth' },
+    { id: 'legacy', aliases: ['04'], section: legacyEra, stage: legacyStage, name: 'Legacy' },
+    { id: 'afterlife', aliases: ['05'], section: afterlifeEra, stage: afterlifeStage, name: 'Afterlife' },
+    { id: 'finale', aliases: ['06'], section: finaleEra, stage: finaleStage, name: 'Finale' }
+  ];
+
+  function getChapterIndex(targetId) {
+    if (typeof targetId === 'number') {
+      return targetId >= 0 && targetId < CHAPTER_CONFIG.length ? targetId : -1;
+    }
+    const clean = String(targetId || '').replace(/^#/, '').toLowerCase().trim();
+    for (let i = 0; i < CHAPTER_CONFIG.length; i++) {
+      if (CHAPTER_CONFIG[i].id === clean || CHAPTER_CONFIG[i].aliases.includes(clean)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  function getChapterScrollTarget(index) {
+    cacheSectionMetrics();
+    if (index <= 0) return 0;
+    const m = sectionMetrics[index];
+    if (!m) return 0;
+    if (index === 1) return m.start + Math.min(140, m.total * 0.08);
+    if (index === 2) return m.start + Math.round(m.total * 0.22);
+    if (index === 3) return m.start + Math.round(m.total * 0.22);
+    if (index === 4) return m.start + Math.round(m.total * 0.22);
+    if (index === 5) return m.start + Math.round(m.total * 0.25);
+    return m.start;
+  }
+
+  function updateActiveChapterUI(index) {
+    if (index < 0 || index >= CHAPTER_CONFIG.length) return;
+
+    // 1. Desktop Navs (.site-header, .hut-nav, .legacy-nav, .afterlife-nav)
+    document.querySelectorAll('.desktop-nav a, .hut-nav nav a, .legacy-nav nav a, .afterlife-nav nav a').forEach(link => {
+      const href = (link.getAttribute('href') || '').replace(/^#/, '').toLowerCase();
+      const linkIdx = getChapterIndex(href);
+      const isMatch = linkIdx === index;
+      link.classList.toggle('is-active', isMatch);
+      if (isMatch) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+
+    // 2. Mobile Nav
+    if (mobileMenu) {
+      mobileMenu.querySelectorAll('nav a').forEach(link => {
+        const href = (link.getAttribute('href') || '').replace(/^#/, '').toLowerCase();
+        const linkIdx = getChapterIndex(href);
+        const isMatch = linkIdx === index;
+        link.classList.toggle('is-active', isMatch);
+        if (isMatch) {
+          link.setAttribute('aria-current', 'page');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    // 3. Chapter Rails (.progress-rail, .hut-chapter-rail, .rebirth-rail, .legacy-rail, .afterlife-rail)
+    const rails = document.querySelectorAll('.progress-rail, .hut-chapter-rail, .rebirth-rail, .legacy-rail, .afterlife-rail');
+    rails.forEach(rail => {
+      const items = rail.querySelectorAll('a, div, span.rail-dot');
+      items.forEach((item, itemIdx) => {
+        const href = item.getAttribute && item.getAttribute('href');
+        let isMatch = false;
+        if (href) {
+          isMatch = getChapterIndex(href) === index;
+        } else {
+          isMatch = itemIdx === index;
+        }
+        item.classList.toggle('is-active', isMatch);
+        if (isMatch) {
+          item.setAttribute('aria-current', 'step');
+        } else if (item.hasAttribute('aria-current')) {
+          item.removeAttribute('aria-current');
+        }
+      });
+    });
+
+    // 4. Update body dataset
+    document.body.dataset.chapter = String(Math.min(index + 1, 6)).padStart(2, '0');
+  }
+
+  function navigateToChapter(chapterIdentifier, options = {}) {
+    const targetIdx = getChapterIndex(chapterIdentifier);
+    if (targetIdx === -1) return false;
+    const cfg = CHAPTER_CONFIG[targetIdx];
+
+    // Requirement 8: Prepare target assets immediately
+    prepareChapterAssets(targetIdx);
+    prepareChapterAssets(targetIdx + 1);
+    prefetchChapter(cfg.id);
+
+    // Requirement 7: Stage culling compatibility - immediately unhide target stage so no black flash or blank screen
+    if (stageList[targetIdx] && stageList[targetIdx].classList.contains('stage--hidden')) {
+      stageList[targetIdx].classList.remove('stage--hidden');
+    }
+    // If target is hero (replaying or jumping home), ensure heroStage is fully unhidden
+    if (targetIdx === 0 && heroStage && heroStage.classList.contains('stage--hidden')) {
+      heroStage.classList.remove('stage--hidden');
+    }
+
+    // Requirement 4 & 5: Determine target scroll position
+    const targetY = getChapterScrollTarget(targetIdx);
+
+    // Requirement 10: Reduced motion handling
+    const isReduced = reducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const behavior = (options.immediate || isReduced) ? 'auto' : 'smooth';
+
+    // Requirement 5 & 9: Native smooth scroll
+    window.scrollTo({
+      top: targetY,
+      behavior
+    });
+    latestScrollY = targetY;
+    requestTick();
+
+    // Requirement 13: Update active chapter UI state
+    updateActiveChapterUI(targetIdx);
+
+    // Requirement 38: URL hash & History management
+    const cleanId = cfg.id;
+    if (options.historyAction === 'push') {
+      if (window.location.hash !== '#' + cleanId) {
+        history.pushState(null, '', '#' + cleanId);
+      }
+    } else if (options.historyAction === 'replace') {
+      if (window.location.hash !== '#' + cleanId) {
+        history.replaceState(null, '', '#' + cleanId);
+      }
+    }
+    return true;
+  }
+
+  // Expose for global / programmatic access
+  window.navigateToChapter = navigateToChapter;
+
+  // Visualizer control
+  const headerAudioCue = document.getElementById('headerAudioCue');
   function toggleVisualizer(forceState) {
-    const next = typeof forceState === 'boolean' ? forceState : !releasePlay.classList.contains('is-playing');
+    const isCurrentlyPlaying = releasePlay && releasePlay.classList.contains('is-playing');
+    const next = typeof forceState === 'boolean' ? forceState : !isCurrentlyPlaying;
+
     if (releasePlay) {
       releasePlay.classList.toggle('is-playing', next);
       releasePlay.setAttribute('aria-pressed', String(next));
@@ -1768,51 +1927,151 @@
       soundToggle.classList.toggle('is-playing', next);
       soundToggle.setAttribute('aria-pressed', String(next));
     }
-  }
-
-  function closeMenu() {
-    if (!menuToggle || !mobileMenu) return;
-    menuToggle.classList.remove('is-open');
-    mobileMenu.classList.remove('is-open');
-    mobileMenu.setAttribute('aria-hidden', 'true');
-    menuToggle.setAttribute('aria-expanded', 'false');
-    document.body.classList.remove('menu-open');
-  }
-
-  if (menuToggle && mobileMenu) {
-    menuToggle.addEventListener('click', () => {
-      const open = !mobileMenu.classList.contains('is-open');
-      menuToggle.classList.toggle('is-open', open);
-      mobileMenu.classList.toggle('is-open', open);
-      mobileMenu.setAttribute('aria-hidden', String(!open));
-      menuToggle.setAttribute('aria-expanded', String(open));
-      document.body.classList.toggle('menu-open', open);
-    });
-    mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+    if (headerAudioCue) {
+      headerAudioCue.classList.toggle('is-playing', next);
+      headerAudioCue.setAttribute('aria-pressed', String(next));
+    }
   }
 
   if (releasePlay) releasePlay.addEventListener('click', () => toggleVisualizer());
   if (soundToggle) soundToggle.addEventListener('click', () => toggleVisualizer());
+  if (headerAudioCue) headerAudioCue.addEventListener('click', () => toggleVisualizer());
 
-  document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', event => {
-      const selector = link.getAttribute('href');
-      if (!selector || selector === '#') return;
-      const target = document.querySelector(selector);
-      if (!target) return;
+  // Mobile menu with focus trap, scroll lock, and escape key
+  const mobileMenuClose = document.getElementById('mobileMenuClose');
+  let savedScrollY = 0;
+  let lastFocusedElement = null;
+
+  function openMenu() {
+    if (!menuToggle || !mobileMenu) return;
+    lastFocusedElement = document.activeElement;
+    savedScrollY = window.scrollY || window.pageYOffset || 0;
+
+    menuToggle.classList.add('is-open');
+    mobileMenu.classList.add('is-open');
+    mobileMenu.setAttribute('aria-hidden', 'false');
+    menuToggle.setAttribute('aria-expanded', 'true');
+    menuToggle.setAttribute('aria-label', 'Close menu');
+
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${savedScrollY}px`;
+    document.body.style.width = '100%';
+    document.body.classList.add('menu-open');
+
+    const firstFocusable = mobileMenu.querySelector('a, button');
+    if (firstFocusable) {
+      window.setTimeout(() => firstFocusable.focus(), 60);
+    }
+  }
+
+  function closeMenu() {
+    if (!menuToggle || !mobileMenu || !mobileMenu.classList.contains('is-open')) return;
+
+    menuToggle.classList.remove('is-open');
+    mobileMenu.classList.remove('is-open');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Open menu');
+
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    document.body.classList.remove('menu-open');
+
+    window.scrollTo(0, savedScrollY);
+    latestScrollY = savedScrollY;
+    requestTick();
+
+    if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+      lastFocusedElement.focus();
+    } else if (menuToggle) {
+      menuToggle.focus();
+    }
+  }
+
+  if (menuToggle && mobileMenu) {
+    menuToggle.addEventListener('click', () => {
+      if (mobileMenu.classList.contains('is-open')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    if (mobileMenuClose) {
+      mobileMenuClose.addEventListener('click', closeMenu);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (!mobileMenu.classList.contains('is-open')) return;
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeMenu();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        const focusables = Array.from(mobileMenu.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])'));
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first || !mobileMenu.contains(document.activeElement)) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last || !mobileMenu.contains(document.activeElement)) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    });
+  }
+
+  // Global anchor click handler: routes all internal hash links through navigateToChapter
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (!href || href === '#') return;
+    const targetId = href.replace(/^#/, '');
+    const targetIdx = getChapterIndex(targetId);
+    if (targetIdx !== -1) {
       event.preventDefault();
       closeMenu();
-      target.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
-    });
+      navigateToChapter(targetId, { historyAction: 'push' });
+    }
+  });
+
+  // Browser Back/Forward support (Requirement 40)
+  window.addEventListener('popstate', () => {
+    const hash = window.location.hash;
+    if (hash) {
+      navigateToChapter(hash, { historyAction: 'none' });
+    } else {
+      navigateToChapter('hero', { historyAction: 'none' });
+    }
   });
 
   /* ==========================================================
      14. PROGRESSIVE CHAPTER PRELOADING
      ========================================================== */
   const chapterAssetsMap = {
+    hero: [
+      'assets/chapter2/ascension-world.webp',
+      'assets/chapter2/abel-ascension.webp'
+    ],
     home: [
       'assets/chapter2/ascension-world.webp',
       'assets/chapter2/abel-ascension.webp'
+    ],
+    ascension: [
+      'assets/chapter3/rebirth-world.webp',
+      'assets/chapter3/abel-rebirth.webp'
     ],
     release: [
       'assets/chapter3/rebirth-world.webp',
@@ -1824,13 +2083,16 @@
     legacy: [
       'assets/chapter5/afterlife-temple.webp',
       'assets/chapter5/afterlife-ritual.webp'
-    ]
+    ],
+    afterlife: [],
+    finale: []
   };
 
   const preloadedUrls = new Set();
 
   function prefetchChapter(sectionId) {
-    const urls = chapterAssetsMap[sectionId];
+    const canonicalKey = (sectionId || '').replace(/^#/, '').toLowerCase();
+    const urls = chapterAssetsMap[canonicalKey];
     if (!urls) return;
     urls.forEach(url => {
       if (preloadedUrls.has(url)) return;
@@ -1856,6 +2118,18 @@
   /* ==========================================================
      15. HERO PRELOADER & INITIALIZATION
      ========================================================== */
+  function handleInitialDeepLink() {
+    const hash = window.location.hash;
+    if (hash && hash !== '#') {
+      const idx = getChapterIndex(hash);
+      if (idx !== -1) {
+        window.setTimeout(() => {
+          navigateToChapter(hash, { historyAction: 'replace', immediate: true });
+        }, 120);
+      }
+    }
+  }
+
   function preloadHeroAssets() {
     if (!preloader || !preloaderBar || !preloaderValue) return;
 
@@ -1884,10 +2158,12 @@
         }, 300);
         // Idle prefetch Chapter 2 once the hero is ready
         if ('requestIdleCallback' in window) {
-          window.requestIdleCallback(() => prefetchChapter('home'));
+          window.requestIdleCallback(() => prefetchChapter('hero'));
         } else {
-          window.setTimeout(() => prefetchChapter('home'), 250);
+          window.setTimeout(() => prefetchChapter('hero'), 250);
         }
+        // Handle deep-link anchor if URL had #chapter on load
+        handleInitialDeepLink();
       }, 160);
     };
 
