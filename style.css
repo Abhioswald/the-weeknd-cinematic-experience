@@ -59,8 +59,19 @@ button { font: inherit; }
   outline-offset: 3px;
 }
 
-button:active,
-a:active,
+.desktop-nav a:active,
+.mobile-menu a:active,
+.mobile-menu-close:active,
+.site-header .icon-link:active,
+.site-header .menu-toggle:active,
+.hut-nav nav a:active,
+.legacy-nav nav a:active,
+.afterlife-nav nav a:active,
+.rail-dot:active,
+.hut-chapter-rail a:active,
+.rebirth-rail a:active,
+.legacy-rail a:active,
+.afterlife-rail a:active,
 .primary-cta:active,
 .hut-trailer:active,
 .legacy-trailer:active,

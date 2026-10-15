@@ -1792,11 +1792,6 @@
     if (index <= 0) return 0;
     const m = sectionMetrics[index];
     if (!m) return 0;
-    if (index === 1) return m.start + Math.min(140, m.total * 0.08);
-    if (index === 2) return m.start + Math.round(m.total * 0.22);
-    if (index === 3) return m.start + Math.round(m.total * 0.22);
-    if (index === 4) return m.start + Math.round(m.total * 0.22);
-    if (index === 5) return m.start + Math.round(m.total * 0.25);
     return m.start;
   }
 
