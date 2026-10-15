@@ -88,7 +88,7 @@ This project consists of static files with no build step required.
 3. Save to publish.
 
 ### Live Production Deployment
-* **Live URL**: [https://the-weeknd-cinematic-experience.vercel.app/](https://the-weeknd-cinematic-experience.vercel.app/)
+* **Live URL**: [https://the-weeknd-iota.vercel.app/](https://the-weeknd-iota.vercel.app/)
 
 ---
 
