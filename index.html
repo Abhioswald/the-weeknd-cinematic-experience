@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#050505">
   <meta name="description" content="A cinematic scroll-driven hero experience inspired by The Weeknd's dark visual universe.">
   <title>The Weeknd — Cinematic Hero</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23d31318'>✦</text></svg>">
   <link rel="preload" as="image" href="assets/images/hero_background.webp" type="image/webp" fetchpriority="high">
   <link rel="preload" as="image" href="assets/images/hero.webp" type="image/webp" fetchpriority="high">
   <link rel="stylesheet" href="style.css">
@@ -24,12 +26,12 @@
 
   <div class="noise" aria-hidden="true"></div>
 
-  <div class="master-progress" id="masterProgress" role="progressbar" aria-label="Experience progress" aria-hidden="true"><span id="masterProgressBar"></span></div>
+  <div class="master-progress" id="masterProgress" aria-hidden="true"><span id="masterProgressBar"></span></div>
   <div class="chapter-transition" id="chapterTransition" aria-hidden="true"><i></i><b></b></div>
   <div class="custom-cursor" id="customCursor" aria-hidden="true"><span></span></div>
 
-  <main>
-    <section class="experience" id="hero" data-alias="home" aria-label="The Weeknd cinematic hero experience">
+  <main id="mainContent">
+    <section class="experience" id="hero" data-alias="home" tabindex="-1" aria-label="The Weeknd cinematic hero experience">
       <span id="home" aria-hidden="true" style="position:absolute;top:0;left:0;width:0;height:0;pointer-events:none;"></span>
       <div class="hero-stage" id="heroStage">
         <div class="hero-world" id="heroWorld" aria-hidden="true">
@@ -66,7 +68,7 @@
               <a href="#finale">Finale</a>
             </nav>
             <div class="header-actions">
-              <button class="icon-link" id="headerAudioCue" type="button" aria-label="Toggle waveform visualizer" title="Toggle visualizer">♪</button>
+              <button class="icon-link" id="headerAudioCue" type="button" aria-pressed="false" aria-label="Toggle waveform visualizer" title="Toggle visualizer">♪</button>
               <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
                 <span></span><span></span><span></span>
               </button>

@@ -1625,14 +1625,16 @@
      11. RESIZE & PAGE VISIBILITY HANDLING
      ========================================================== */
   let resizeTimer = 0;
-  window.addEventListener('resize', () => {
+  function handleLayoutMetricsRefresh() {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
       cacheSectionMetrics();
       latestScrollY = window.scrollY || window.pageYOffset || 0;
       requestTick();
     }, 100);
-  }, { passive: true });
+  }
+  window.addEventListener('resize', handleLayoutMetricsRefresh, { passive: true });
+  window.addEventListener('orientationchange', handleLayoutMetricsRefresh, { passive: true });
 
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
@@ -1977,11 +1979,22 @@
     latestScrollY = savedScrollY;
     requestTick();
 
-    if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+    if (lastFocusedElement && lastFocusedElement !== document.body && typeof lastFocusedElement.focus === 'function') {
       lastFocusedElement.focus();
     } else if (menuToggle) {
       menuToggle.focus();
     }
+  }
+
+  // Skip link activation ensures smooth transfer of focus to hero
+  const skipLink = document.querySelector('.skip-link');
+  if (skipLink) {
+    skipLink.addEventListener('click', () => {
+      const hero = document.getElementById('hero');
+      if (hero) {
+        window.setTimeout(() => hero.focus(), 60);
+      }
+    });
   }
 
   if (menuToggle && mobileMenu) {
