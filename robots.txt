@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# Sitemap: Replace with production URL when domain is configured
-# Sitemap: https://your-domain.com/sitemap.xml
+Sitemap: https://the-weeknd-cinematic-experience.vercel.app/sitemap.xml

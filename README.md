@@ -87,7 +87,8 @@ This project consists of static files with no build step required.
 2. Set the Source branch to `main` (or deployment branch) and folder to `/ (root)`.
 3. Save to publish.
 
-*Note: Update the canonical URL placeholder in `index.html` and sitemap declaration in `robots.txt` once your final live custom domain is established.*
+### Live Production Deployment
+* **Live URL**: [https://the-weeknd-cinematic-experience.vercel.app/](https://the-weeknd-cinematic-experience.vercel.app/)
 
 ---
 
