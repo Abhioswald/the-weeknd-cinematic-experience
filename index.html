@@ -4,10 +4,49 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#050505">
-  <meta name="description" content="A cinematic scroll-driven hero experience inspired by The Weeknd's dark visual universe.">
-  <title>The Weeknd — Cinematic Hero</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23d31318'>✦</text></svg>">
+  <meta name="theme-color" content="#020202">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="An unofficial, interactive cinematic web experience inspired by The Weeknd's visual universe. Explore the narrative chapters from Darkness to Afterlife.">
+  <title>The Weeknd — Cinematic Interactive Experience</title>
+
+  <!-- Canonical URL: Update with production domain upon deployment -->
+  <!-- <link rel="canonical" href="https://your-production-domain.com/"> -->
+
+  <!-- Favicons & App Icons -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Weeknd Cinematic Experience">
+  <meta property="og:title" content="The Weeknd — Cinematic Interactive Experience">
+  <meta property="og:description" content="An unofficial, interactive cinematic web experience inspired by The Weeknd's visual universe. Explore the narrative chapters from Darkness to Afterlife.">
+  <meta property="og:image" content="assets/images/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Weeknd Cinematic Interactive Experience - Hurry Up Tomorrow">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Weeknd — Cinematic Interactive Experience">
+  <meta name="twitter:description" content="An unofficial, interactive cinematic web experience inspired by The Weeknd's visual universe. Explore the narrative chapters from Darkness to Afterlife.">
+  <meta name="twitter:image" content="assets/images/og-preview.jpg">
+
+  <!-- Structured Data (CreativeWork / WebApplication - Unofficial fan project) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "The Weeknd — Cinematic Interactive Experience",
+    "description": "An unofficial fan-made interactive cinematic web experience inspired by The Weeknd's visual universe, created for educational and portfolio purposes.",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "All",
+    "inLanguage": "en",
+    "isAccessibleForFree": true
+  }
+  </script>
+
+  <!-- Performance Preload (Critical Hero LCP Only) -->
   <link rel="preload" as="image" href="assets/images/hero_background.webp" type="image/webp" fetchpriority="high">
   <link rel="preload" as="image" href="assets/images/hero.webp" type="image/webp" fetchpriority="high">
   <link rel="stylesheet" href="style.css">
@@ -528,7 +567,10 @@
           <span>HURRY UP TOMORROW</span>
           <a href="#hero" class="finale-replay" id="finaleReplay" aria-label="Replay the experience from beginning">REPLAY THE EXPERIENCE <b>↺</b></a>
         </div>
-        <div class="finale-signoff">ABEL TESFAYE &nbsp; / &nbsp; THE WEEKND</div>
+        <footer class="finale-signoff">
+          <span>ABEL TESFAYE &nbsp; / &nbsp; THE WEEKND</span>
+          <small class="finale-disclaimer">Unofficial fan-made interactive experience. Created for educational &amp; portfolio purposes. Not affiliated with The Weeknd or XO.</small>
+        </footer>
       </div>
     </section>
 

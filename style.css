@@ -3237,12 +3237,25 @@ html.has-custom-cursor .custom-cursor.is-hovering {
   position: absolute;
   z-index: 4;
   left: 50%;
-  bottom: 28px;
+  bottom: 22px;
   translate: -50%;
+  display: grid;
+  gap: 5px;
+  justify-items: center;
+  text-align: center;
   white-space: nowrap;
   font-size: 6px;
   letter-spacing: .46em;
   color: rgba(255,255,255,.2);
+}
+.finale-disclaimer {
+  font-size: 7.5px;
+  letter-spacing: .05em;
+  text-transform: none;
+  color: rgba(255,255,255,.24);
+  white-space: normal;
+  max-width: min(90vw, 560px);
+  line-height: 1.4;
 }
 
 /* Desktop composition guardrails. */
@@ -3290,10 +3303,16 @@ html.has-custom-cursor .custom-cursor.is-hovering {
     justify-content: center;
   }
   .finale-signoff {
-    bottom: calc(20px + env(safe-area-inset-bottom));
+    bottom: calc(14px + env(safe-area-inset-bottom));
     font-size: clamp(8px, 2.2vw, 10px);
     letter-spacing: .32em;
     color: rgba(255,255,255,.35);
+    white-space: normal;
+    width: 92vw;
+  }
+  .finale-disclaimer {
+    font-size: clamp(7.5px, 2vw, 9px);
+    line-height: 1.35;
   }
 }
 

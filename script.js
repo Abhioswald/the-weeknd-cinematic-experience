@@ -8,7 +8,7 @@
   const perfOverrideParam = urlParams.get('performance');
   const perfSavedOverride = localStorage.getItem('the_weeknd_performance');
   const fpsOverrideParam = urlParams.get('fps');
-  const showDebugBadge = urlParams.get('debug') === '1' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const showDebugBadge = urlParams.get('debug') === '1';
 
   // Multi-signal hardware heuristics (handles missing APIs safely)
   const numCores = typeof navigator.hardwareConcurrency === 'number' ? navigator.hardwareConcurrency : 4;
@@ -222,7 +222,9 @@
     requestTick();
   };
 
-  console.log(`[Performance] ${currentPerfMode.toUpperCase()} (source: ${detectionSource}, concurrency: ${navigator.hardwareConcurrency || 'n/a'}, memory: ${navigator.deviceMemory || 'n/a'}GB, visualFPS: ${use30FpsThrottle ? '30' : '60'})`);
+  if (showDebugBadge) {
+    console.log(`[Performance] ${currentPerfMode.toUpperCase()} (source: ${detectionSource}, concurrency: ${navigator.hardwareConcurrency || 'n/a'}, memory: ${navigator.deviceMemory || 'n/a'}GB, visualFPS: ${use30FpsThrottle ? '30' : '60'})`);
+  }
 
   function downgradePerformance(targetMode, reason) {
     if (targetMode === currentPerfMode) return;
@@ -231,7 +233,9 @@
 
     currentPerfMode = targetMode;
     applyPerformanceClasses();
-    console.log(`[Performance] Downgraded to ${currentPerfMode.toUpperCase()} (reason: ${reason})`);
+    if (showDebugBadge) {
+      console.log(`[Performance] Downgraded to ${currentPerfMode.toUpperCase()} (reason: ${reason})`);
+    }
     setupPointerListeners();
     requestTick();
   }
@@ -1517,15 +1521,17 @@
           framesOver50msPercent: Number((deltaArr.length ? (framesOver50 / deltaArr.length * 100) : 0).toFixed(2))
         };
 
-        console.log('=== BENCHMARK RESULTS (5-SECOND TEST) ===');
-        console.log(`RAF callbacks: ${report.rafCallbacks}`);
-        console.log(`Visual render calls: ${report.visualRenderCalls}`);
-        console.log(`Scroll events: ${report.scrollEvents}`);
-        console.log(`Visual FPS: ${report.visualFps}`);
-        console.log(`RAF FPS: ${report.rafFps}`);
-        console.log(`Avg visual task time: ${report.avgVisualTaskMs} ms`);
-        console.log(`Frames > 33.3ms: ${report.framesOver33ms} (${report.framesOver33msPercent}%)`);
-        console.log(`Frames > 50.0ms: ${report.framesOver50ms} (${report.framesOver50msPercent}%)`);
+        if (showDebugBadge) {
+          console.log('=== BENCHMARK RESULTS (5-SECOND TEST) ===');
+          console.log(`RAF callbacks: ${report.rafCallbacks}`);
+          console.log(`Visual render calls: ${report.visualRenderCalls}`);
+          console.log(`Scroll events: ${report.scrollEvents}`);
+          console.log(`Visual FPS: ${report.visualFps}`);
+          console.log(`RAF FPS: ${report.rafFps}`);
+          console.log(`Avg visual task time: ${report.avgVisualTaskMs} ms`);
+          console.log(`Frames > 33.3ms: ${report.framesOver33ms} (${report.framesOver33msPercent}%)`);
+          console.log(`Frames > 50.0ms: ${report.framesOver50ms} (${report.framesOver50msPercent}%)`);
+        }
 
         if (typeof onComplete === 'function') onComplete(report);
         return report;

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap: Replace with production URL when domain is configured
+# Sitemap: https://your-domain.com/sitemap.xml
