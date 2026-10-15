@@ -96,4 +96,6 @@ This project consists of static files with no build step required.
 
 This is an **unofficial fan-made interactive experience** created strictly for **educational and portfolio purposes**. 
 
+*Note: The waveform visualizer on this website is an interactive visual animation effect only. This website contains no audio or music playback.*
+
 All artist imagery, music album art, trademarks, and branding (including "The Weeknd" and "XO") are the intellectual property of Abel Tesfaye, XO, Republic Records, and their respective copyright holders. This project is not affiliated with, endorsed by, or sponsored by The Weeknd or XO Records.
